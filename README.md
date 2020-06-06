@@ -14,7 +14,8 @@ As it is built on a linux environment some tweaking might be necessary
   Install Cinder
 
 ## How to build:
-  Modify proj/cmake/CMakeLists.txt line 6 to use the path for Cinder
+Modify proj/cmake/CMakeLists.txt line 6 to use the path for Cinder
+
     cd proj
     mkdir build
     cd build
@@ -22,5 +23,5 @@ As it is built on a linux environment some tweaking might be necessary
     make -j 8
 
 ## How to try:
-  cd Debug/beach_ball
+    cd Debug/beach_ball
     ./beach_ball
