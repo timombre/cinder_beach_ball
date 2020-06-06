@@ -17,13 +17,13 @@ using namespace ci::app;
 gl::TextureRef backgroundImage;
 
 float ballRadius = 30.0;
-float frictionFactor = 0.99; // air drag
-float elasticity = 0.7;  // some energy is absorbed when bouncing on the floor
-float gAcceleration = 0.4; // gravity
-float maxBounceRollVelocity = 1.0;  // it's gotta stop somehow
+float frictionFactor = 0.99; // Air drag
+float elasticity = 0.7;  // Some energy is absorbed when bouncing on the floor
+float gAcceleration = 0.4; // Gravity
+float maxBounceRollVelocity = 1.0;  // It's gotta stop somehow
 
 
-// actual coordinates used for integration
+// Actual coordinates used for integration
 float x;
 float y;
 float vx;
@@ -62,20 +62,16 @@ void BeachBallApp::setup()
 	}
 
 	
-	std::srand((unsigned) time(0));
+	std::srand((unsigned) time(0));  // different generation for each launch
 
 	float initial_x = (float) rand() / RAND_MAX; // between 0 and 1
 	float initial_y = (float) rand() / RAND_MAX; 
 	float initial_vx = (float) rand() / RAND_MAX;
 	float initial_vy = (float) rand() / RAND_MAX;
 	
-	x = app::getWindowWidth() * initial_x; //adaptation to screen size
-	y = app::getWindowHeight() * initial_y; //adaptation to screen size
+	x = app::getWindowWidth() * initial_x; // adaptation to screen size
+	y = app::getWindowHeight() * initial_y;
 
-	std::cout << initial_x << " " << initial_y << std::endl;
-
-
-	std::cout << x << " " << y << std::endl;
 	vx = initial_vx * 100.0; // realistic velocity scaling
 	vy = initial_vy * -100.0; //shoot upwards
 
@@ -86,14 +82,20 @@ void BeachBallApp::setup()
 void BeachBallApp::update()
 {
 	// Boundary conditions
-	if (x < ballRadius || x > app::getWindowWidth() - ballRadius) { vx = -1.0 * vx;} // Lateral reflexion
 
-	if (y < ballRadius) {vy = -1.0 * vy;} // unrealistic sky relection to avoid escaping the screen
+	// Lateral reflexion
+	if (x < ballRadius || x > app::getWindowWidth() - ballRadius) {
+		vx = -1.0 * vx;
+    }
 
+    // Unrealistic sky relection to avoid escaping the screen
+	if (y < ballRadius) {vy = -1.0 * vy;}
+
+    // Ground Boundary
 	else if (y > app::getWindowHeight() - ballRadius){
 		if (abs(vx) < maxBounceRollVelocity) { vx = 0.0 ;}
 		if (abs(vy) < maxBounceRollVelocity) { vy = 0.0 ;}
-		else {vy = -1.0 * elasticity * vy;}
+		else {vy = -1.0 * elasticity * vy;} // Energy absorption
 	}
 
 
@@ -105,9 +107,7 @@ void BeachBallApp::update()
 	vy = frictionFactor * vy + gAcceleration;
 
 	// Console logs
-
 	std::cout << "coordinates: " << x << " " << y << std::endl;
-
 	std::cout << "velocities: " << vx << " " << vy << std::endl;
 
 	
@@ -142,9 +142,9 @@ void BeachBallApp::draw()
 
 	gl::clear();
 
-    gl::draw(backgroundImage, getWindowBounds());  // Nice background
+    gl::draw(backgroundImage, getWindowBounds()); // Nice background
     gl::color(0, 1, 0); // Green ball
-    gl::drawSolidCircle( glm::vec2(x, y), ballRadius);
+    gl::drawSolidCircle( glm::vec2(x, y), ballRadius); //Actual drawing
     gl::color(1, 1, 1); //reset color to avoid green screen
 
 
