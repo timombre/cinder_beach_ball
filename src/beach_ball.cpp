@@ -29,6 +29,8 @@ float y;
 float vx;
 float vy;
 
+bool inBoundary;
+
 
 // We'll create a new Cinder Application by deriving from the App class.
 class BeachBallApp : public App {
@@ -77,6 +79,8 @@ void BeachBallApp::setup()
 
 	std::cout << vx << " " << vy << std::endl;
 
+	inBoundary = false;
+
 }
 
 void BeachBallApp::update()
@@ -84,19 +88,23 @@ void BeachBallApp::update()
 	// Boundary conditions
 
 	// Lateral reflexion
-	if (x < ballRadius || x > app::getWindowWidth() - ballRadius) {
-		vx = -1.0 * vx;
-    }
+	if (inBoundary){inBoundary = false;}
+	else{
+			if (x < ballRadius || x > app::getWindowWidth() - ballRadius) {
+				vx = -1.0 * vx; inBoundary= true;
+		    }
 
-    // Unrealistic sky relection to avoid escaping the screen
-	if (y < ballRadius) {vy = -1.0 * vy;}
+		    // Unrealistic sky relection to avoid escaping the screen
+			if (y < ballRadius) {vy = -1.0 * vy; inBoundary= true;}
 
-    // Ground Boundary
-	else if (y > app::getWindowHeight() - ballRadius){
-		if (abs(vx) < maxBounceRollVelocity) { vx = 0.0 ;}
-		if (abs(vy) < maxBounceRollVelocity) { vy = 0.0 ;}
-		else {vy = -1.0 * elasticity * vy;} // Energy absorption
+		    // Ground Boundary
+			else if (y > app::getWindowHeight() - ballRadius){
+				if (abs(vx) < maxBounceRollVelocity) { vx = 0.0 ;}
+				if (abs(vy) < maxBounceRollVelocity) { vy = 0.0 ;}
+				else {vy = -1.0 * elasticity * vy; inBoundary= true;} // Energy absorption
+			}
 	}
+	
 
 
     // Equation of motion integration
